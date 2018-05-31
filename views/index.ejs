@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script data-require="jquery@2.1.4" data-semver="2.1.4" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.min.js"></script>
+<body>
+  <div class="container">
+       <div ng-app="myApp" ng-controller="StoreController">
+         <h1 class="well" >
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdsaq0eyQL26B0q56s06QmqRq-N6FHvv3KRd0Xlbxk3TmO2UtQkA" height="90" width="90" alt="logo"/>
+                     Fruit Store
+         </h1>
+         <ul class="list-group text-center">
+           <li class="col-xs-6 col-md-3 col-sm-3 col-lg-3 list-group-item" ng-repeat="product in products">
+
+               <div class="thumbnail">
+               <img src={{product.image}}
+               <figcaption>
+                   {{product.name}}
+ 						                      <h3>{{product.price | currency}}</h3>
+               </figcaption>
+                 </div>
+             <input class="btn btn-info" type="button" ng-click="addItemToCart(product)" value="BUY" />
+           </li>
+           <div ng-show="cart.length !== 0">
+          <h1 style="color:orange">CART-SHOW</h1>
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="c in cart">
+              <h4>{{c.name}} |                <span style="color:blue"> {{c.count}} </span>
+ | {{c.price*c.count | currency}}</h4>
+ <input class="btn btn-danger" type="button" ng-click="removeItemCart(c)" value="Remove">
+        </li>
+         </ul>
+         Total : {{total | currency}}
+
+       </div>
+     </div>
+   </div>
+</body>
+<script>
+var app = angular.module('myApp', []);
+app.controller('StoreController', function($scope) {
+  $scope.products = products;
+  $scope.count = 0;
+  $scope.total = 0;
+  $scope.cart = [];
+    $scope.addItemToCart=function(product){
+      if ($scope.cart.length === 0){
+		 		product.count = 1;
+		 		$scope.cart.push(product);
+		 	} else {
+		 		var repeat = false;
+		 		for(var i = 0; i< $scope.cart.length; i++){
+		 			if($scope.cart[i].id === product.id){
+		 				repeat = true;
+		 				$scope.cart[i].count +=1;
+		 			}
+		 		}
+		 		if (!repeat) {
+		 			product.count = 1;
+		 		 	$scope.cart.push(product);
+		 		}
+		 	}
+      $scope.removeItemCart = function(product){
+
+      if(product.count > 1){
+        product.count -= 1;
+        }
+      else if(product.count === 1){
+        var index = $scope.cart.indexOf(product);
+      $scope.cart.splice(index, 1);
+      }
+
+    }
+    $scope.total += parseFloat(product.price);
+  }
+
+});
+
+var products = [{
+		id: 1,
+		name: 'Strawberry',
+		price: 100.0,
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg3bkFeb6lYz7bvMDmZ3nVfts0_w0A73pQZ7TLSl2mvGFO5PoiMQ'
+	},{
+		id: 2,
+		name: 'Apple',
+		price: 14.5,
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD_k9yQMP6UwSRi3COfQ5reEgFiJHnJ-0vmvxWpbJDbQ33g7Nl0g'
+	},{
+		id: 3,
+		name: 'Banana',
+		price: 100.43,
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkuR7UTj9nWQiWKmPsVOxNtR8zCUD63_les-Kdgaa-A3g5nzy4lg'
+	},{
+		id: 4,
+		name: 'Mixed Fruit',
+		price: 99.9,
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOQBE2gOw9CYugi7qlKYjX7iWATX-d77NaCdh8N1Tj2Uffe0Thkw'
+	}];
+</script>
+</html>
